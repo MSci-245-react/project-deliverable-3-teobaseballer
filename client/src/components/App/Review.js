@@ -1,23 +1,46 @@
 import * as React from 'react';
-import ReviewTitle from './ReviewTitle';
-import ReviewBody from './ReviewBody';
-import ReviewRating from './ReviewRating';
-import MovieSelection from './MovieSelection';
-//import all necessary libraries here, e.g., Material-UI Typography, as follows
-import Typography from '@mui/material/Typography';
 
-const Review = () => {
+//MUI Button
+import Button from "@mui/material/Button";
 
-  //states declarations
-  //constants and functions declarations
+//MUI Typography Element
+import Typography from "@mui/material/Typography";
 
+//MUI Grid Layout
+import Grid from "@mui/material/Grid";
+
+const Review = ({ handleSubmit, submittedReview }) => {
   return (
-    <>
-    
-    {/* JSX block */}
-
-
-    </>
+    <div>
+      <Button variant="contained" color="primary" onClick={handleSubmit}>
+        Submit
+      </Button>
+      {submittedReview && (
+        <div>
+          <Typography variant="h5" color = "primary" marginBottom={2}>
+            Your review has been received:
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="body1">Movie:</Typography>
+              <Typography variant="body2">{submittedReview.movie}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">Title:</Typography>
+              <Typography variant="body2">{submittedReview.title}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">Body:</Typography>
+              <Typography variant="body2">{submittedReview.body}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">Rating:</Typography>
+              <Typography variant="body2">{submittedReview.rating}</Typography>
+            </Grid>
+          </Grid>
+        </div>
+      )}
+    </div>
   );
 }
 

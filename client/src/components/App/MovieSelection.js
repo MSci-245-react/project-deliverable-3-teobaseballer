@@ -1,20 +1,35 @@
 import * as React from 'react';
-//import all necessary libraries here, e.g., Material-UI Typography, as follows
-import Typography from '@mui/material/Typography';
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 
-const MovieSelection = () => {
-
-  //states declarations
-  //constants and functions declarations
-
+const MovieSelection = ({ movies, selectedMovie, handleMovieChange, showSelectError }) => {
   return (
-    <>
-    
-    {/* JSX block */}
-
-
-    </>
+    <div>
+      <Typography variant="subtitle1">Select a movie:</Typography>
+      <Select
+        value={selectedMovie}
+        onChange={handleMovieChange}
+        displayEmpty
+        fullWidth
+        error={showSelectError}
+      >
+        <MenuItem value="" disabled>
+          Select a movie
+        </MenuItem>
+        {movies.map((movie) => (
+          <MenuItem key={movie.id} value={movie.name}>
+            {movie.name}
+          </MenuItem>
+        ))}
+      </Select>
+      {showSelectError && (
+        <Typography variant="subtitle2" style={{ color: "red" }}>
+          Select your movie
+        </Typography>
+      )}
+    </div>
   );
-}
+};
 
 export default MovieSelection;

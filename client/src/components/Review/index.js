@@ -2,12 +2,12 @@ import React from 'react';
 import Typography from "@mui/material/Typography";
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-const Landing = () => {
+const Review = () => {
 const navigate = useNavigate();
 return (
 <div>
 <Typography variant="h3" color="inherit" noWrap>
-This is Landing Page
+This is Review Page
 </Typography>
 <Link
 color="inherit"
@@ -30,10 +30,10 @@ Navigate to Search Page
 <Link 
 color="inherit" 
 style={{ cursor: "pointer" }} 
-onClick={() => navigate('/Review')}
+onClick={() => navigate('/Landing')}
 >
 <Typography variant="h5" color="inherit" noWrap>
-Navigate to Review Page
+Navigate to Landing Page
 </Typography>
 </Link>
 <Link 
@@ -48,4 +48,4 @@ Navigate to MyPage
 </div>
 )
 }
-export default Landing;
+export default Review;
