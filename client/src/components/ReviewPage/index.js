@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Toolbar } from '@mui/material';
 
-const Landing = () => {
+const ReviewPage = () => {
     const navigate = useNavigate();
-  
+
     const handleLinkClick = (path) => {
       navigate(path);
     };
-  
+
     return (
       <div>
         <AppBar position="static">
@@ -38,13 +38,12 @@ const Landing = () => {
             </Link>
           </Toolbar>
         </AppBar>
-
-        <Typography variant="h3" color="inherit" noWrap>
-          Welcome to My Movie Review Website!
-        </Typography>
-
-      </div>
-    );
-  };
   
-  export default Landing;
+        <Typography variant="h5" color="inherit" noWrap>
+          This is Review Page
+        </Typography>
+        
+      </div>
+    )
+}
+export default ReviewPage;

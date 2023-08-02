@@ -9,6 +9,12 @@ import ReviewBody from './ReviewBody';
 import ReviewRating from './ReviewRating';
 import Review from './Review';
 
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Landing from '../Landing';
+import Search from '../Search';
+import ReviewPage from '../ReviewPage';
+import MyPage from '../MyPage';
+
 const App = () => {
 
   const [movies, setMovies] = React.useState([]);
@@ -159,46 +165,51 @@ const App = () => {
 
   return (
     <Router>
-      <Routes>
-<Route path="/Home" element={<Home />} />
-<Route path="/Landing" element={<Landing />} />
-<Route path="/Search" element={<Search />} />
-<Route path="/Review" element={<Review />} />
-<Route path="/MyPage" element={<MyPage />} />
-</Routes>
-    <div>
-      <Typography variant="h3" component="h1">
-        Review a Movie
-      </Typography>
+      <div>
+        <Typography variant="h3" component="h1">
+          Review a Movie
+        </Typography>
 
-      <MovieSelection
-        movies={movies}
-        selectedMovie={selectedMovie}
-        handleMovieChange={handleMovieChange}
-        showSelectError={showSelectError}
-      />
-      <ReviewTitle
-        reviewTitle={reviewTitle}
-        handleReviewTitleChange={handleReviewTitleChange}
-        showTitleError={showTitleError}
-      />
-      <ReviewBody
-        reviewBody={reviewBody}
-        handleReviewBodyChange={handleReviewBodyChange}
-        showBodyError={showBodyError}
-      />
-      <ReviewRating
-        rating={rating}
-        handleRatingChange={handleRatingChange}
-        showRatingError={showRatingError}
-      />
-      <Review
-        handleSubmit={handleSubmit}
-        submittedReview={submittedReview}
-      />
-    </div>
+        <Routes>
+          <Route path="/Search" element={<Search />} />
+          <Route path="/ReviewPage" element={
+            <>
+              <ReviewPage />
+              <MovieSelection
+                movies={movies}
+                selectedMovie={selectedMovie}
+                handleMovieChange={handleMovieChange}
+                showSelectError={showSelectError}
+              />
+              <ReviewTitle
+                reviewTitle={reviewTitle}
+                handleReviewTitleChange={handleReviewTitleChange}
+                showTitleError={showTitleError}
+              />
+              <ReviewBody
+                reviewBody={reviewBody}
+                handleReviewBodyChange={handleReviewBodyChange}
+                showBodyError={showBodyError}
+              />
+              <ReviewRating
+                rating={rating}
+                handleRatingChange={handleRatingChange}
+                showRatingError={showRatingError}
+              />
+              <Review
+                handleSubmit={handleSubmit}
+                submittedReview={submittedReview}
+              />
+            </>
+          } />
+          <Route path="/MyPage" element={<MyPage />} />
+          <Route path="/" element={<Landing />} />
+        </Routes>
+      </div>
     </Router>
+
+
   );
-}
+};
 
 export default App;
