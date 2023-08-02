@@ -1,77 +1,134 @@
-import React from 'react';
-import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from 'react';
+import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-const MyPage = () => {
-const navigate = useNavigate();
 
-useEffect(() => {
-    fetch('/api/getReviews')
+import { AppBar, Toolbar } from '@mui/material';
+
+const MyPage = () => {
+  const navigate = useNavigate();
+
+  const handleLinkClick = (path) => {
+    navigate(path);
+  };
+
+  const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState('');
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
+  const [userFeedback, setUserFeedback] = useState({});
+
+  useEffect(() => {
+    fetch('/api/getMovies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then((response) => response.json())
-      .then((data) => setReviews(data))
-      .catch((error) => console.error('Error fetching reviews:', error));
+      .then((data) => {
+        setMovies(data);
+
+        if (data.length > 0) {
+          setSelectedMovie(data[0].name);
+          handleMovieSelect(data[0].name);
+        }
+      })
+      .catch((error) => console.error(error));
   }, []);
 
-return (
-<div>
-<Typography variant="h3" color="inherit" noWrap>
-This is MyPage Page
-</Typography>
+  const handleMovieSelect = (movieTitle) => {
+    setSelectedMovie(movieTitle);
+    const selectedMovieData = movies.find((movie) => movie.name === movieTitle);
 
-{reviews.map((review) => (
-        <div key={review.reviewId}>
-          <Typography variant="h6" color="inherit" noWrap>
-            Movie: {review.movieTitle}
-          </Typography>
-          <Typography variant="subtitle1" color="inherit" noWrap>
-            Review Title: {review.reviewTitle}
-          </Typography>
+    if (selectedMovieData) {
+      const leadActors = selectedMovieData.leadActors;
+      const recommendations = movies.filter(
+        (movie) => movie !== selectedMovieData && movie.leadActors && movie.leadActors.some((actor) => leadActors.includes(actor))
+      );
+      setRecommendedMovies(recommendations);
+    } else {
+      setRecommendedMovies([]);
+    }
+  };
+
+  const handleUserFeedback = (movieTitle, liked) => {
+    setUserFeedback((prevFeedback) => ({
+      ...prevFeedback,
+      [movieTitle]: liked,
+    }));
+
+    const updatedRecommendedMovies = recommendedMovies.filter(
+      (movie) => movie.name !== movieTitle || (movie.name === movieTitle && liked)
+    );
+    setRecommendedMovies(updatedRecommendedMovies);
+  };
+
+  return (
+    <div>
+      <AppBar position="static">
+      <Toolbar>
+            <Link color="inherit" style={{ textDecoration: 'none', marginRight: 15, cursor: "pointer" }} onClick={() => handleLinkClick('/')}>
+              <Typography variant="h6" color="inherit" noWrap>
+                Landing
+              </Typography>
+            </Link>
+            <Link color="inherit" style={{ textDecoration: 'none', marginRight: 15, cursor: "pointer" }} onClick={() => handleLinkClick('/search')}>
+              <Typography variant="h6" color="inherit" noWrap>
+                Search
+              </Typography>
+            </Link>
+            <Link color="inherit" style={{ textDecoration: 'none', marginRight: 15, cursor: "pointer" }} onClick={() => handleLinkClick('/reviewPage')}>
+              <Typography variant="h6" color="inherit" noWrap>
+                ReviewPage
+              </Typography>
+            </Link>
+            <Link color="inherit" style={{ textDecoration: 'none', cursor: "pointer" }} onClick={() => handleLinkClick('/myPage')}>
+              <Typography variant="h6" color="inherit" noWrap>
+                MyPage
+              </Typography>
+            </Link>
+          </Toolbar>
+      </AppBar>
+
+      <Typography variant="h5" color="inherit" noWrap>
+        This is MyPage Page
+      </Typography>
+
+      <div>
+        <label>
+          Select a movie:
+          <select value={selectedMovie} onChange={(e) => handleMovieSelect(e.target.value)}>
+            {movies.map((movie) => (
+              <option key={movie.id} value={movie.name}>
+                {movie.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div>
+        <Typography variant="h6" color="inherit" noWrap>
+          Recommendations:
+        </Typography>
+        {recommendedMovies.length === 0 ? (
           <Typography variant="body1" color="inherit" noWrap>
-            Review: {review.reviewBody}
+            No recommendations available for this movie.
           </Typography>
-          <Typography variant="body2" color="inherit" noWrap>
-            Rating: {review.rating}
-          </Typography>
-        </div>
-      ))}
+        ) : (
+          <ul>
+            {recommendedMovies.map((movie) => (
+              <li key={movie.id}>
+                {movie.name}{' '}
+                <button onClick={() => handleUserFeedback(movie.name, true)}>Like</button>
+                <button onClick={() => handleUserFeedback(movie.name, false)}>Dislike</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
 
-<Link
-color="inherit"
-style={{ cursor: "pointer" }}
-onClick={() => navigate('/Home')}
->
-<Typography variant="h5" color="inherit" noWrap>
-Navigate to Home Page
-</Typography>
-</Link>
-<Link
-color="inherit"
-style={{ cursor: "pointer" }}
-onClick={() => navigate('/Search')}
->
-<Typography variant="h5" color="inherit" noWrap>
-Navigate to Search Page
-</Typography>
-</Link>
-<Link 
-color="inherit" 
-style={{ cursor: "pointer" }} 
-onClick={() => navigate('/Review')}
->
-<Typography variant="h5" color="inherit" noWrap>
-Navigate to Review Page
-</Typography>
-</Link>
-<Link 
-color="inherit" 
-style={{ cursor: "pointer" }} 
-onClick={() => navigate('/Landing')}
->
-<Typography variant="h5" color="inherit" noWrap>
-Navigate to Landing
-</Typography>
-</Link>
-</div>
-)
-}
 export default MyPage;
